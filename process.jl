@@ -14,8 +14,7 @@ function basic_transform!(x::DataFrame)
     delete!(x, [:姓名, :次数, :状态])
     names!(x, [:datetime, :id, :category, :position, :amount, :balance])
 
-    # x[:datetime] = map(x->DateTime(x, "yyyy/mm/dd HH:MM:SS"), x[:datetime])
-    # x[:balance] -= x[:amount] # 把余额转化为消费前的
+    x[:balance] -= x[:amount] # 把余额转化为消费前的
     x
 end
 
@@ -23,7 +22,7 @@ Base.vcat(x::DataFrame, ::Void) = x
 Base.vcat(::Void, x::DataFrame) = x
 Base.vcat(::Void, ::Void) = nothing
 
-end # init
+end
 
 #==== main ====#
 filelist = readdir("raw")
@@ -53,10 +52,10 @@ function parse_filename(x::AbstractString)
 end
 
 function vcat_unique(x, y)
-    y[1, :id] in x[:id] ? x : [x; y]
+    [x; y[!Bool[i in x[:id] for i in y[:id]], :]]
 end
 
-end # init
+end
 
 #==== main ====#
 df_student = @time @parallel vcat_unique for i in filelist

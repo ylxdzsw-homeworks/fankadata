@@ -14,7 +14,10 @@ function basic_transform!(x::DataFrame)
     delete!(x, [:姓名, :次数, :状态])
     names!(x, [:datetime, :id, :category, :position, :amount, :balance])
 
-    x[:balance] -= x[:amount] # 把余额转化为消费前的
+    x[x[:category] .== "银行转帐", :category] = "银行转账" # 修正错别字。。
+
+    p = x[:category] .== "持卡人消费"
+    x[p, :balance] -= x[p, :amount] # 把余额转化为消费前的
     x
 end
 
@@ -45,7 +48,7 @@ function parse_filename(x::AbstractString)
     x = split(x, '-')
     DataFrame(gender = x[2],
               major  = x[3],
-              degree = x[4][1:1],
+              honors = x[4][1:1],
               grade  = x[4][2:3],
               class  = x[4][7:8],
               id     = x[4])

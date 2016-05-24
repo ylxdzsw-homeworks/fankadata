@@ -36,6 +36,7 @@ df_transaction = @time @parallel vcat for i in filelist
     try
         basic_transform!(readtable("raw/$i"))
     catch e
+        println(e)
         println(i)
     end
 end

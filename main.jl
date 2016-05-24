@@ -20,7 +20,6 @@ df_temp = df_transaction[(df_transaction[:category].=="存款") | (df_transactio
 df_temp = join(df_temp, df_student, on=:id, kind=:left)
 
 df_temp[:dayofweek] = map(Dates.dayofweek,  df_temp[:datetime])
-
 plot(df_temp[[:dayofweek, :count]] |> groupby(:dayofweek) |> sum,
      x=:dayofweek, y=:count_sum, Guide.xticks(ticks=collect(1:7)),
      Scale.x_continuous(labels=x->get(Dates.english_daysofweekabbr, x, "fuck")),
@@ -47,12 +46,11 @@ plot(df_temp[[:month, :id, :amount]] |> groupby([:id, :month]) |> sum, x=:amount
 df_temp = df_transaction[df_transaction[:category].=="补助", [:datetime, :amount, :id]]
 df_temp = join(df_temp, df_student, on=:id, kind=:left)
 
-df_temp[:dayofweek] = map(Dates.dayofweek,  df_temp[:datetime])
-
 plot(df_temp[[:gender, :amount]] |> groupby(:gender) |> mean,
      x=:gender, y=:amount_mean, Geom.bar, Theme(bar_spacing=1cm),
      Guide.title("人均补助金额 ~ 性别"))
 
+df_temp[:dayofweek] = map(Dates.dayofweek,  df_temp[:datetime])
 plot(df_temp[[:dayofweek, :count]] |> groupby(:dayofweek) |> sum,
      x=:dayofweek, y=:count_sum, Guide.xticks(ticks=collect(1:7)),
      Scale.x_continuous(labels=x->get(Dates.english_daysofweekabbr, x, "fuck")),

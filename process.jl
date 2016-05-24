@@ -50,7 +50,6 @@ function parse_filename(x::AbstractString)
     x = split(x, '-')
     DataFrame(gender = x[2],
               major  = x[3],
-              honors = x[4][1:1],
               grade  = x[4][2:3],
               id     = x[4])
 end
